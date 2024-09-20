@@ -76,7 +76,7 @@ Telegram Redmine Notification Bot предназначен для уведомл
     - **TelegramSettings.Token**: Токен вашего Telegram бота.
     - **ConnectionStrings.DefaultConnection**: Путь к базе данных SQLite для бота.
     - **ConnectionStrings.IssuesViewConnection**: Строка подключения к базе данных с представлениями заявок.
-    - **HostingSettings.RequestFrequency**: Частота запросов в секунду для обновления информации.
+    - **HostingSettings.RequestFrequency**: Частота запросов в секундах для обновления информации.
 
 3. **Запуск проекта**
 
