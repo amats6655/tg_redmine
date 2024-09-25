@@ -87,8 +87,8 @@ public class NotificationService : INotificationService
         try
         {
             var message = group.Key.ThreadId != 0
-                ? await _telegramBot.SendMessageThreadAsync(group.Key.ChatId, group.Key.ThreadId, messageText, ParseMode.Html, stoppingToken)
-                : await _telegramBot.SendMessageAsync(group.Key.ChatId, messageText, ParseMode.Html, stoppingToken);
+                ? await _telegramBot.SendMessageThreadAsync(group.Key.ChatId, group.Key.ThreadId, messageText, ParseMode.Html, stoppingToken, issue.Id, issue.Status)
+                : await _telegramBot.SendMessageAsync(group.Key.ChatId, messageText, ParseMode.Html, stoppingToken, issue.Id, issue.Status);
 
             await _messageRepository.AddMessageAsync(message, issue, stoppingToken);
 
@@ -106,7 +106,7 @@ public class NotificationService : INotificationService
     {
         try
         {
-            var updatedMessage = await _telegramBot.EditMessageAsync(currentMessage.ChatId, currentMessage.MessageId, messageText, ParseMode.Html, stoppingToken);
+            var updatedMessage = await _telegramBot.EditMessageAsync(currentMessage.ChatId, currentMessage.MessageId, messageText, ParseMode.Html, stoppingToken, issue.Id, issue.Status);
             var result = await _messageRepository.UpdateMessage(updatedMessage, issue, stoppingToken);
             if (result.IsSuccess)
             {

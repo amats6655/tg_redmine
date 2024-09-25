@@ -43,32 +43,63 @@ namespace tg_redmine.TelegramBot
         /// Отправляет сообщение в указанный чат.
         /// </summary>
         public async Task<Message> SendMessageAsync(long chatId, string message, ParseMode parseMode,
-            CancellationToken stoppingToken)
+            CancellationToken stoppingToken, int issueId, string status)
         {
+            var inlineMarkup = new InlineKeyboardMarkup();
+            switch (status)
+            {
+                case "В работе":
+                    inlineMarkup.AddButton("Решить заявку", callbackData: $"closeIssue:{issueId}");
+                    break;
+                default:
+                    inlineMarkup.AddButton("Взять в работу", callbackData: $"InWorkIssue:{issueId}");
+                    break;
+            }
             return await ExecuteWithRetryAsync(() => 
-                _botClient.SendTextMessageAsync(chatId, message, parseMode: parseMode, cancellationToken: stoppingToken));
+                _botClient.SendTextMessageAsync(chatId, message, parseMode: parseMode, cancellationToken: stoppingToken, replyMarkup: inlineMarkup));
         }
 
         /// <summary>
         /// Редактирует существующее сообщение в указанном чате.
         /// </summary>
         public async Task<Message> EditMessageAsync(long chatId, int messageId, string message, ParseMode parseMode,
-            CancellationToken stoppingToken)
+            CancellationToken stoppingToken, int issueId, string status)
         {
+            var inlineMarkup = new InlineKeyboardMarkup();
+            switch (status)
+            {
+                case "В работе":
+                    inlineMarkup.AddButton("Решить заявку", callbackData: $"closeIssue:{issueId}");
+                    break;
+                default:
+                    inlineMarkup.AddButton("Взять в работу", callbackData: $"InWorkIssue:{issueId}");
+                    break;
+            }
             return await ExecuteWithRetryAsync(() => 
                 _botClient.EditMessageTextAsync(chatId: chatId, messageId: messageId, text: message,
-                    parseMode: parseMode, cancellationToken: stoppingToken));
+                    parseMode: parseMode, cancellationToken: stoppingToken, replyMarkup: inlineMarkup));
         }
 
         /// <summary>
         /// Отправляет сообщение в указанный тред супер-чата.
         /// </summary>
         public async Task<Message> SendMessageThreadAsync(long chatId, int threadId, string message,
-            ParseMode parseMode, CancellationToken stoppingToken)
+            ParseMode parseMode, CancellationToken stoppingToken, int issueId, string status)
         {
+            var inlineMarkup = new InlineKeyboardMarkup();
+            switch (status)
+            {
+                case "В работе":
+                    inlineMarkup.AddButton("Решить заявку", callbackData: $"closeIssue:{issueId}");
+                    break;
+                default:
+                    inlineMarkup.AddButton("Взять в работу", callbackData: $"InWorkIssue:{issueId}");
+                    break;
+            }
+            
             return await ExecuteWithRetryAsync(() =>
                 _botClient.SendTextMessageAsync(chatId: chatId, messageThreadId: threadId, text: message,
-                    parseMode: parseMode, cancellationToken: stoppingToken));
+                    parseMode: parseMode, cancellationToken: stoppingToken, replyMarkup: inlineMarkup));
         }
 
         /// <summary>

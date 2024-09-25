@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Redmine.Net.Api;
 using Serilog;
 using Serilog.Settings.Configuration;
 using Telegram.Bot;
@@ -13,7 +14,7 @@ using tg_redmine.Core.Repositories.Interfaces;
 using tg_redmine.Core.Services.Implementations;
 using tg_redmine.Core.Services.Interfaces;
 using tg_redmine.Data;
-using tg_redmine.TelegramBot;
+using tg_redmine.RedmineIntegration;
 
 namespace tg_redmine;
 
@@ -63,6 +64,7 @@ private static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 			services.Configure<HostingSettings>(configuration.GetSection("HostingSettings"));
+			services.Configure<RedmineSettings>(configuration.GetSection("RedmineSettings"));
             services.Configure<TelegramSettings>(configuration.GetSection("TelegramSettings"));
             services.Configure<IssuesSettings>(configuration.GetSection("IssuesViewConnection"));
             services.AddMemoryCache();
@@ -76,6 +78,14 @@ private static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             
+            services.AddSingleton<RedmineService>(sp =>
+            {
+	            var redmineSettings = sp.GetRequiredService<IOptions<RedmineSettings>>().Value;
+	            var redmineManager = new RedmineManager(new RedmineManagerOptionsBuilder()
+		            .WithHost(redmineSettings.Url)
+		            .WithApiKeyAuthentication(redmineSettings.ApiKey));
+	            return new RedmineService(redmineManager);
+            });
             
             services.AddSingleton<TelegramBotClient>(sp =>
             {

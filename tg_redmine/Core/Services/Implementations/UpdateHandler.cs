@@ -19,10 +19,12 @@ public class UpdateHandler : Interfaces_IUpdateHandler
     private readonly IAdminRepository _adminRepository;
     private readonly Dictionary<long, string> _userStates;
     private readonly ICommandHandler _commandHandler;
+    private readonly RedmineService _redmineService;
+    private readonly IMessageRepository _messageRepository;
 
     public UpdateHandler(TelegramBotClient botClient, ILogger<UpdateHandler> logger, 
         IAdminRepository adminRepository, Dictionary<long, string> userStates, 
-        ICommandHandler commandHandler)
+        ICommandHandler commandHandler, RedmineService redmineService, IMessageRepository messageRepository)
     {
         _botClient = botClient ?? throw new ArgumentNullException(nameof(botClient));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -62,33 +64,16 @@ public class UpdateHandler : Interfaces_IUpdateHandler
             return;
         }
 
-        switch (query.Data)
-        {
-            case "users":
-                await HandleUsersMenuAsync(query);
-                break;
-            case "messages":
-                await HandleGetMessagesCommandAsync(query);
-                break;
-            case "logs":
-                await HandleGetLogsCommandAsync(query);
-                break;
-            case "show_users":
-                await HandleGetUsersCommandAsync(query);
-                break;
-            case "add_user":
-                await HandleAddUserCommandAsync(query);
-                break;
-            case "update_user":
-                await HandleUpdateUserCommandAsync(query);
-                break;
-            case "delete_user":
-                await HandleDeleteUserCommandAsync(query);
-                break;
-            default:
-                _logger.LogWarning($"Неизвестный callback query: {query.Data}");
-                break;
-        }
+        if(query.Data.StartsWith("closeIssue")) await HandleCloseIssueCommandAsync(query);
+        else if(query.Data.StartsWith("InWorkIssue")) await HandleInWorkIssueCommandAsync(query);
+        else if(query.Data.StartsWith("users")) await HandleUsersMenuAsync(query);
+        else if(query.Data.StartsWith("messages")) await HandleGetMessagesCommandAsync(query);
+        else if(query.Data.StartsWith("logs")) await HandleGetLogsCommandAsync(query);
+        else if(query.Data.StartsWith("show_users")) await HandleGetUsersCommandAsync(query);
+        else if(query.Data.StartsWith("add_users")) await HandleAddUserCommandAsync(query);
+        else if(query.Data.StartsWith("update_user")) await HandleUpdateUserCommandAsync(query);
+        else if(query.Data.StartsWith("delete_user")) await HandleDeleteUserCommandAsync(query);
+        else _logger.LogWarning($"Неизвестный callback query: {query.Data}");
     }
 
     private async Task HandleUsersMenuAsync(CallbackQuery query)
@@ -168,6 +153,70 @@ public class UpdateHandler : Interfaces_IUpdateHandler
     {
         await _botClient.SendTextMessageAsync(query.Message.Chat.Id, "Введите логин пользователя для удаления.");
         _userStates[query.Message.Chat.Id] = "awaiting_delete_user";
+    private async Task HandleCloseIssueCommandAsync(CallbackQuery query)
+    {
+        var issueId = query.Data?.Split(':')[1];
+        if (issueId != null)
+        {
+            var result = await _redmineService.CloseIssue(issueId);
+            switch (result.IsSuccess)
+            {
+                case true:
+                {
+                    await _botClient.AnswerCallbackQueryAsync(query.Id,
+                        text: $"Заявка {issueId} выполнена. Помните перевести её в статус Закрыта в ServiceDesk",
+                        showAlert: true);
+                    if (query.Message != null)
+                        await _botClient.DeleteMessageAsync(query.Message.Chat.Id, query.Message.MessageId);
+                    var currentMessages =
+                        await _messageRepository.GetMessagesByIssueIdAsync(int.Parse(issueId), CancellationToken.None);
+                    foreach (var message in currentMessages.Data)
+                    {
+                        await _messageRepository.DeleteMessageAsync(message, CancellationToken.None);
+                    }
+                    _logger.LogInformation("Пользователь {login} перевел заявку {issueId} в статус Решена", query.From.Username, issueId);
+                    break;
+                }
+                case false:
+                    await _botClient.AnswerCallbackQueryAsync(query.Id,
+                        text: $"{result.Message}", showAlert: true);
+                    break;
+            }
+        }
+    }
+
+    private async Task HandleInWorkIssueCommandAsync(CallbackQuery query)
+    {
+        var issueId = query.Data?.Split(':')[1];
+        if (issueId != null)
+        {
+            var result = await _redmineService.InWorkIssue(issueId);
+            switch (result.IsSuccess)
+            {
+                case true:
+                {
+                    var inlineMarkup = new InlineKeyboardMarkup()
+                        .AddButton("Решить заявку", callbackData: $"closeIssue:{issueId}");
+                    if (query.Message != null)
+                    {
+                        var newMessage = new StringBuilder(query.Message.Text);
+                        newMessage.Replace("Новая", "В работе");
+                        newMessage.Replace("В ожидании", "В работе");
+                        await _botClient.EditMessageTextAsync(query.Message.Chat.Id, query.Message.MessageId, newMessage.ToString(),
+                            ParseMode.Html, replyMarkup: inlineMarkup);
+                    }
+
+                    await _botClient.AnswerCallbackQueryAsync(query.Id,
+                        text: $"Заявка {issueId} взята в работу.");
+                    _logger.LogInformation("Пользователь {login} перевел заявку {issueId} в статус В работе", query.From.Username, issueId);
+                    break;
+                }
+                case false:
+                    await _botClient.AnswerCallbackQueryAsync(query.Id,
+                        text: $"{result.Message}", showAlert: true);
+                    break;
+            }
+        }
     }
 
     private async Task<bool> CheckIfAdminAndRespondAsync(long chatId, string username, long userId)
