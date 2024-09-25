@@ -33,8 +33,9 @@ public class UpdateHandler : Interfaces_IUpdateHandler
         _commandHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
     }
 
-    public async Task HandleUpdateAsync(Update update)
+    public async Task HandleUpdateAsync(Update update, CancellationToken stoppingToken)
     {
+        stoppingToken.ThrowIfCancellationRequested();
         try
         {
             switch (update.Type)
