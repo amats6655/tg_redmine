@@ -18,6 +18,8 @@ public class MessageRepository : IMessageRepository
 		_contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
 		_memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
 	}
+	
+	public MessageRepository(){}
 
 	public async Task<IServiceResponse<List<Message>>> GetMessagesByIssueIdAsync(
 		int issueId,
