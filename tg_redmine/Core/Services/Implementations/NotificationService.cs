@@ -71,7 +71,7 @@ public class NotificationService : INotificationService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Произошла ошибка при удалении сообщения в чате {ChatId}, ID сообщения {MessageId}", message.ChatId, message.MessageId);
+            _logger.LogError(e, "Произошла ошибка при удалении сообщения в чате {ChatId}, ID сообщения {MessageId}, ID заявки {IssueID}", message.ChatId, message.MessageId, message.IssueId);
         }
     }
 

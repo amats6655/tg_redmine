@@ -75,9 +75,14 @@ public partial class HostedService : BackgroundService
 
                 await Task.Delay(TimeSpan.FromSeconds(_requestFrequency), stoppingToken);
             }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogWarning("Приложение было остановлено пользователем");
+                isSuccess = false;
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при обработке задач");
+                _logger.LogError(ex, "Необработанная ошибка");
                 isSuccess = false;
             }
         }
