@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Settings.Configuration;
 using Telegram.Bot;
 using tg_redmine.Core.Helpers;
+using tg_redmine.Core.Host;
 using tg_redmine.Core.Repositories.Implementations;
 using tg_redmine.Core.Repositories.Interfaces;
 using tg_redmine.Core.Services.Implementations;
@@ -96,7 +97,7 @@ private static IHostBuilder CreateHostBuilder(string[] args) =>
             services.AddSingleton<IUpdateHandler, UpdateHandler>();
             services.AddSingleton<ICommandHandler, CommandHandler>();
 
-            services.AddSingleton<TelegramBotService>(sp => new TelegramBotService(
+            services.AddSingleton<ITelegramBotService>(sp => new TelegramBotService(
 	            sp.GetRequiredService<TelegramBotClient>(),
 	            sp.GetRequiredService<ILogger<TelegramBotService>>(),
 	            sp.GetRequiredService<IUpdateHandler>()));

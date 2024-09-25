@@ -151,8 +151,13 @@ public class UpdateHandler : Interfaces_IUpdateHandler
 
     private async Task HandleDeleteUserCommandAsync(CallbackQuery query)
     {
-        await _botClient.SendTextMessageAsync(query.Message.Chat.Id, "Введите логин пользователя для удаления.");
-        _userStates[query.Message.Chat.Id] = "awaiting_delete_user";
+        if (query.Message != null)
+        {
+            await _botClient.SendTextMessageAsync(query.Message.Chat.Id, "Введите логин пользователя для удаления.");
+            _userStates[query.Message.Chat.Id] = "awaiting_delete_user";
+        }
+    }
+
     private async Task HandleCloseIssueCommandAsync(CallbackQuery query)
     {
         var issueId = query.Data?.Split(':')[1];

@@ -6,15 +6,15 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 using Interfaces_IUpdateHandler = tg_redmine.Core.Services.Interfaces.IUpdateHandler;
-using IUpdateHandler = tg_redmine.Core.Services.Interfaces.IUpdateHandler;
 
-namespace tg_redmine.TelegramBot
+namespace tg_redmine.Core.Host
 {
     /// <summary>
     /// Сервис для работы с Telegram ботом.
     /// </summary>
-    public class TelegramBotService
+    public class TelegramBotService : ITelegramBotService
     {
         private readonly TelegramBotClient _botClient;
         private readonly ILogger<TelegramBotService> _logger;
@@ -38,6 +38,8 @@ namespace tg_redmine.TelegramBot
 
             InitializeBot(updateHandler);
         }
+        
+        public TelegramBotService(){}
 
         /// <summary>
         /// Отправляет сообщение в указанный чат.
@@ -137,7 +139,7 @@ namespace tg_redmine.TelegramBot
         private void InitializeBot(Interfaces_IUpdateHandler updateHandler)
         {
             _botClient.StartReceiving(
-                updateHandler: async (_, update, token) => await updateHandler.HandleUpdateAsync(update),
+                updateHandler: async (_, update, token) => await updateHandler.HandleUpdateAsync(update, token),
                 errorHandler: HandleErrorAsync,
                 receiverOptions: _receiverOptions,
                 cancellationToken: default
