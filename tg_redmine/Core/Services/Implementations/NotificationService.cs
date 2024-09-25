@@ -132,7 +132,7 @@ public class NotificationService : INotificationService
 
         msg.Append(GetHeader(issue))
            .Append(GetPriority(issue))
-           .Append($"\n \ud83c\udfd8 <b>Корпус:</b> {issue?.Corpus ?? "Неизвестен"}")
+           .Append($"\n \ud83c\udfd8 <b>Корпус:</b> #{issue?.Corpus ?? "Неизвестен"}")
            .Append($"\n <b>Номер комнаты:</b> {issue?.RoomNumber ?? "Неизвестен"}")
            .Append($"\n <b>Тема:</b> {issue?.Subject ?? "Неизвестно"} \n")
            .Append(GetStatus(issue!))
