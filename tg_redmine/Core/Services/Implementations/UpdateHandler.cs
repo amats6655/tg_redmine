@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -6,13 +7,12 @@ using Telegram.Bot.Types.ReplyMarkups;
 using tg_redmine.Core.Helpers;
 using tg_redmine.Core.Repositories.Interfaces;
 using tg_redmine.Core.Services.Interfaces;
-using IUpdateHandler = tg_redmine.Core.Services.Interfaces.IUpdateHandler;
+using tg_redmine.RedmineIntegration;
 using File = System.IO.File;
-using Interfaces_IUpdateHandler = tg_redmine.Core.Services.Interfaces.IUpdateHandler;
 
 namespace tg_redmine.Core.Services.Implementations;
 
-public class UpdateHandler : Interfaces_IUpdateHandler
+public class UpdateHandler : IUpdateHandler
 {
     private readonly TelegramBotClient _botClient;
     private readonly ILogger<UpdateHandler> _logger;
@@ -31,6 +31,8 @@ public class UpdateHandler : Interfaces_IUpdateHandler
         _adminRepository = adminRepository ?? throw new ArgumentNullException(nameof(adminRepository));
         _userStates = userStates ?? throw new ArgumentNullException(nameof(userStates));
         _commandHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
+        _redmineService = redmineService ?? throw new ArgumentNullException(nameof(redmineService)); 
+        _messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
     }
 
     public async Task HandleUpdateAsync(Update update, CancellationToken stoppingToken)

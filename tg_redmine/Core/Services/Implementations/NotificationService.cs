@@ -1,21 +1,20 @@
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types.Enums;
+using tg_redmine.Core.Host;
 using tg_redmine.Core.Models;
 using tg_redmine.Core.Repositories.Interfaces;
 using tg_redmine.Core.Services.Interfaces;
-using tg_redmine.TelegramBot;
-using Message = Telegram.Bot.Types.Message;
 
 namespace tg_redmine.Core.Services.Implementations;
 
 public class NotificationService : INotificationService
 {
     private readonly ILogger<NotificationService> _logger;
-    private readonly TelegramBotService _telegramBot;
+    private readonly ITelegramBotService _telegramBot;
     private readonly IMessageRepository _messageRepository;
 
-    public NotificationService(TelegramBotService telegramBot, 
+    public NotificationService(ITelegramBotService telegramBot, 
         ILogger<NotificationService> logger,
         IMessageRepository messageRepository)
     {

@@ -9,9 +9,9 @@ using tg_redmine.Core.Repositories.Interfaces;
 using tg_redmine.Core.Services.Interfaces;
 using Models_User = tg_redmine.Core.Models.User;
 
-namespace tg_redmine.Core.Helpers;
+namespace tg_redmine.Core.Host;
 
-public partial class HostedService : BackgroundService
+public class HostedService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<HostedService> _logger;

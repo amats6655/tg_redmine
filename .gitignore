@@ -1,0 +1,170 @@
+# Build outputs
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Project-specific files
+*.csproj.user
+*.vcxproj.filters
+
+# Log files
+*.log
+
+# Visual Studio temporary files
+*.unsuccessfully-deleted
+
+# NuGet package files
+*.nupkg
+*.nuspec
+
+# NuGet package directories
+packages/
+
+# Visual Studio build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio cache files
+ProjectExplorerTreeState.xml
+
+# Visual Studio backup files
+*.vsbackup
+*.vscodeanalysis
+
+# Visual Studio 2017 and later cache files
+*.vs/
+
+# Visual Studio 2015 and earlier cache files
+ipch/
+*.lastbuildstate
+*.vspscc
+*.vsp
+*.vssscc
+*.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio 2013 and earlier temporary files
+_ReSharper*/
+*.resharper
+*.DotSettings.user
+
+# MSTest test results
+[Tt]est[Rr]esult*.xml
+
+# Visual Studio Code temporary files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Other temporary files
+*.tmp
+*.tmp.*
+*.bak
+*.tmp_proj
+*.tmp_webinfo
+*.dll.migrated.json
+*.skip
+*.skip.ignore
+*.skip.used
+*.skip.unsuccessful
+*.skip.unverified
+*.skip.rejected
+*.skip.accepted
+*.skip.lastverified
+*.skip.lastused
+*.skip.lastaccepted
+*.skip.lastrejected
+*.lastverified
+*.lastused
+*.lastaccepted
+*.lastrejected
+*.verified
+*.used
+*.accepted
+*.rejected
+
+# NuGet
+# *.nupkg
+# *.nuspec
+# *.nuget.props
+# *.nuget.targets
+# *.nuget.*.props
+# *.nuget.*.targets
+# packages/
+# *.lock.json
+
+# .NET Core
+# project.lock.json
+# project.fragment.lock.json
+# **/bin
+# **/obj
+
+# Bower
+# bower.json
+# bower_components
+
+# Node.js
+# node_modules/
+# *.js.map
+# package-lock.json
+
+# Microsoft Azure Stream Analytics Local Runner
+# JobConfig.json
+# ASALocalRun.exe
+# ASALocalRun.exe.config
+
+# Microsoft Azure Stream Analytics
+# JobConfig.json
+# ASAQueryCompileOutput.log
+
+# Windows Store app package directories and files
+# AppPackages/
+# Package.StoreAssociation.xml
+# Package.phone.appxmanifest
+# *.appx
+# *.appxbundle
+# *.appxupload
+# *.msix
+# *.msixbundle
+# *.msixupload
+# *.zip
+
+# Windows Phone app package directories and files
+# AppPackages/
+# Package.phone.appxmanifest
+# *.xap
+
+# Visual Studio cache directories
+# *.cache
+# *.ide
+# *.ipch
+# *.obj
+# *.tlog
+# *.opendb
+# *.opensdf
+# *.outputlog
+# *.sdf
+# *.suo
+# *.user
+# *.v11.suo
+# *.v12.suo
+# *.v14.suo
+# *.v15.suo
+# *.v16.suo
+# *.v17.suo
+# *.v18.suo
+# *.v19.suo
+# *.v20.suo
+# *.v21.suo
+# *.v22.
