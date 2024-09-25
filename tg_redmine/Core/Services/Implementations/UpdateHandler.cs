@@ -86,12 +86,13 @@ public class UpdateHandler : Interfaces_IUpdateHandler
             new[] { InlineKeyboardButton.WithCallbackData("Удалить", "delete_user") },
         });
 
-        await _botClient.EditMessageTextAsync(
-            chatId: query.Message.Chat.Id,
-            messageId: query.Message.MessageId,
-            text: "Выберите действие с пользователями:",
-            replyMarkup: keyboard
-        );
+        if (query.Message != null)
+            await _botClient.EditMessageTextAsync(
+                chatId: query.Message.Chat.Id,
+                messageId: query.Message.MessageId,
+                text: "Выберите действие с пользователями:",
+                replyMarkup: keyboard
+            );
     }
 
     private async Task HandleGetMessagesCommandAsync(CallbackQuery query)
@@ -142,11 +143,14 @@ public class UpdateHandler : Interfaces_IUpdateHandler
 
     private async Task HandleUpdateUserCommandAsync(CallbackQuery query)
     {
-        await _botClient.SendTextMessageAsync(query.Message.Chat.Id,
-            "Введите данные для обновления пользователя в формате: @логин chatId userId threadId isAdmin \n " +
-            "Пример: @test 123 456 1 0 \n Получить эту информацию можно написав команду /start в чате с ботом.",
-            parseMode: ParseMode.Html);
-        _userStates[query.Message.Chat.Id] = "awaiting_update_user";
+        if (query.Message != null)
+        {
+            await _botClient.SendTextMessageAsync(query.Message.Chat.Id,
+                "Введите данные для обновления пользователя в формате: @логин chatId userId threadId isAdmin \n " +
+                "Пример: @test 123 456 1 0 \n Получить эту информацию можно написав команду /start в чате с ботом.",
+                parseMode: ParseMode.Html);
+            _userStates[query.Message.Chat.Id] = "awaiting_update_user";
+        }
     }
 
     private async Task HandleDeleteUserCommandAsync(CallbackQuery query)
