@@ -72,7 +72,7 @@ public class UpdateHandler : IUpdateHandler
         else if(query.Data.StartsWith("users")) await HandleUsersMenuAsync(query);
         else if(query.Data.StartsWith("messages")) await HandleGetMessagesCommandAsync(query);
         else if(query.Data.StartsWith("logs")) await HandleGetLogsCommandAsync(query);
-        else if(query.Data.StartsWith("show_users")) await HandleGetUsersCommandAsync(query);
+        else if(query.Data.StartsWith("show_user")) await HandleGetUsersCommandAsync(query);
         else if(query.Data.StartsWith("add_users")) await HandleAddUserCommandAsync(query);
         else if(query.Data.StartsWith("update_user")) await HandleUpdateUserCommandAsync(query);
         else if(query.Data.StartsWith("delete_user")) await HandleDeleteUserCommandAsync(query);
