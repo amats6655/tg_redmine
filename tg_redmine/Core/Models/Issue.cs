@@ -4,7 +4,7 @@ public class Issue
 {
 	public int Id { get; set; }
 	public string Tracker { get; set; } 
-	public string Corpus { get; set; }
+	public string? Corpus { get; set; }
 	public string RoomNumber { get; set; }
 	public string Priority { get; set; }
 	public string Subject { get; set; }

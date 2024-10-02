@@ -131,7 +131,7 @@ public class NotificationService : INotificationService
 
         msg.Append(GetHeader(issue))
            .Append(GetPriority(issue))
-           .Append($"\n \ud83c\udfd8 <b>Корпус:</b> #{issue?.Corpus ?? "Неизвестен"}")
+           .Append(GetCorpus(issue))
            .Append($"\n <b>Номер комнаты:</b> {issue?.RoomNumber ?? "Неизвестен"}")
            .Append($"\n <b>Тема:</b> {issue?.Subject ?? "Неизвестно"} \n")
            .Append(GetStatus(issue!))
@@ -159,7 +159,7 @@ public class NotificationService : INotificationService
         {
             "Критический" => "\n ‼\ufe0f <b>Приоритет:</b> Критический",
             "Высокий" => "\n \u2757 <b>Приоритет:</b> Высокий",
-            _ => $"\n <b>Приоритет:</b> {issue.Priority ?? "Неизвестен"}"
+            _ => $"\n <b>Приоритет:</b> {issue.Priority}"
         };
 
     private static string GetHeader(Issue issue) =>
@@ -173,6 +173,11 @@ public class NotificationService : INotificationService
             "Решена" => "\n \u2705 <b>Статус:</b> Решена",
             "Закрыта" => "\n \u2705 <b>Статус:</b> Закрыта",
             "В ожидании" => "\n \ud83e\udd14 <b>Статус:</b> В ожидании",
-            _ => $"\n <b>Статус:</b> {issue.Status ?? "Неизвестно"}"
+            _ => $"\n <b>Статус:</b> {issue.Status}"
         };
+
+    private static string GetCorpus(Issue issue)
+    {
+        return string.IsNullOrEmpty(issue?.Corpus) ? string.Empty : $"\n \ud83c\udfd8 <b>Корпус:</b> #{issue.Corpus}";
+    }
 }
