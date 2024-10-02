@@ -32,19 +32,44 @@ public class IssueRepository : IIssueRepository
 				var issue = new Issue
 				{
 					Id = result.GetInt32("id"),
-					Tracker = result.GetString("tracker"),
-					Corpus = result.GetString("corpus"),
-					RoomNumber = result.GetString("room_number"),
-					Subject = result.GetString("subject"),
-					Status = result.GetString("status"),
-					CreatedOn = result.GetDateTime("created_on"),
-					UpdatedOn = result.GetDateTime("updated_on"),
-					Author = result.GetString("author"),
-					Telegram = result.GetString("Telegram").Split(' ').ToList(),
-					Comment = result.GetValue("comment").ToString() ?? string.Empty,
-					Commentator = result.GetValue("commentator").ToString() ?? string.Empty,
-					Priority = result.GetString("priority")
+					Tracker = !result.IsDBNull(result.GetOrdinal("tracker"))
+								? result.GetString("tracker")
+								: string.Empty,
+					RoomNumber = !result.IsDBNull(result.GetOrdinal("room_number"))
+								   ? result.GetString("room_number")
+								   : string.Empty,
+					Corpus = !result.IsDBNull(result.GetOrdinal("corpus"))
+							   ? result.GetString("corpus")
+							   : string.Empty,
+					Subject = !result.IsDBNull(result.GetOrdinal("subject"))
+								? result.GetString("subject")
+								: string.Empty,
+					Status = !result.IsDBNull(result.GetOrdinal("status"))
+							   ? result.GetString("status")
+							   : string.Empty,
+					CreatedOn = !result.IsDBNull(result.GetOrdinal("created_on"))
+								  ? result.GetDateTime("created_on")
+								  : DateTime.MinValue,
+					UpdatedOn = !result.IsDBNull(result.GetOrdinal("updated_on"))
+								  ? result.GetDateTime("updated_on")
+								  : DateTime.MinValue,
+					Author = !result.IsDBNull(result.GetOrdinal("author"))
+							  ? result.GetString("author")
+							  : string.Empty,
+					Telegram = !result.IsDBNull(result.GetOrdinal("Telegram"))
+								? result.GetString("Telegram").Split(' ').ToList()
+								: new List<string>(),
+					Comment = !result.IsDBNull(result.GetOrdinal("comment"))
+							   ? result.GetString("comment")
+							   : string.Empty,
+					Commentator = !result.IsDBNull(result.GetOrdinal("commentator"))
+								   ? result.GetString("commentator")
+								   : string.Empty,
+					Priority = !result.IsDBNull(result.GetOrdinal("priority"))
+								? result.GetString("priority")
+								: string.Empty
 				};
+
 				issues.Add(issue);
 			}
 
